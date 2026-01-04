@@ -6,6 +6,8 @@ import { Heart, ArrowRight, GraduationCap, Stethoscope, TreePine, Droplets, User
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { causes, stats } from "@/data/mockData";
+const formatINR = (amount: number) =>
+  `₹${amount.toLocaleString("en-IN")}`;
 
 const Index = () => {
   const featuredCauses = causes.filter((cause) => cause.featured).slice(0, 3);
@@ -17,11 +19,13 @@ const Index = () => {
     food: <Droplets className="h-5 w-5" />,
   };
 
-  const formatNumber = (num: number) => {
-    if (num >= 1000000) return `$${(num / 1000000).toFixed(1)}M`;
-    if (num >= 1000) return `$${(num / 1000).toFixed(0)}K`;
-    return `$${num}`;
-  };
+ const formatNumber = (num: number) => {
+  if (num >= 10000000) return `₹${(num / 10000000).toFixed(1)}Cr`;
+  if (num >= 100000) return `₹${(num / 100000).toFixed(1)}L`;
+  if (num >= 1000) return `₹${(num / 1000).toFixed(0)}K`;
+  return `₹${num.toLocaleString("en-IN")}`;
+};
+
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -228,8 +232,8 @@ const Index = () => {
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Raised</span>
-                        <span className="font-semibold text-foreground">
-                          ${cause.raised.toLocaleString()} / ${cause.goal.toLocaleString()}
+   <span className="font-semibold text-foreground">
+{formatINR(cause.raised)} / {formatINR(cause.goal)}
                         </span>
                       </div>
                       <Progress value={(cause.raised / cause.goal) * 100} className="h-2" />
@@ -278,9 +282,14 @@ const Index = () => {
                 </Button>
               </Link>
               <Link to="/register">
-                <Button size="lg" variant="outline" className="gap-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
-                  Become a Volunteer
-                </Button>
+<Button
+  size="lg"
+  variant="outline"
+  className="gap-2 bg-white text-black border-white hover:bg-gray-100"
+>
+  Become a Volunteer
+</Button>
+
               </Link>
             </div>
           </div>

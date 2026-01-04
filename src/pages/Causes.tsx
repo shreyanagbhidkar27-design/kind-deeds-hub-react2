@@ -133,12 +133,15 @@ const Causes = () => {
                         </div>
                         <Progress value={(cause.raised / cause.goal) * 100} className="h-2" />
                         <div className="flex justify-between text-sm">
+                          
                           <span className="text-foreground font-medium">
-                            ${cause.raised.toLocaleString()} raised
-                          </span>
-                          <span className="text-muted-foreground">
-                            of ${cause.goal.toLocaleString()}
-                          </span>
+  ₹{cause.raised.toLocaleString("en-IN")} raised
+</span>
+<span className="text-muted-foreground">
+  of ₹{cause.goal.toLocaleString("en-IN")}
+</span>
+
+
                         </div>
                       </div>
                       

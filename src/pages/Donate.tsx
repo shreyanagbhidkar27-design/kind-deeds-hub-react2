@@ -10,11 +10,18 @@ import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { causes } from "@/data/mockData";
-
+import { translations, Language } from "../translations";
 const Donate = () => {
   const [searchParams] = useSearchParams();
   const initialCause = searchParams.get("cause") || "";
   const { toast } = useToast();
+
+
+const [lang, setLang] = useState<Language>("en");
+const t = translations[lang];
+
+
+
 
   const [formData, setFormData] = useState({
     name: "",
@@ -32,23 +39,25 @@ const Donate = () => {
     e.preventDefault();
     
     if (!formData.name.trim() || !formData.email.trim() || !formData.causeId) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill in all required fields.",
-        variant: "destructive",
-      });
-      return;
-    }
+  toast({
+    title: t.missingInfo,
+    description: t.missingDesc,
+    variant: "destructive",
+  });
+  return;
+}
+
 
     const amount = formData.amount === "custom" ? formData.customAmount : formData.amount;
-    if (!amount || parseFloat(amount) <= 0) {
-      toast({
-        title: "Invalid Amount",
-        description: "Please enter a valid donation amount.",
-        variant: "destructive",
-      });
-      return;
-    }
+if (!amount || parseFloat(amount) <= 0) {
+  toast({
+    title: t.invalidAmount,
+    description: t.invalidAmountDesc,
+    variant: "destructive",
+  });
+  return;
+}
+
 
     setIsLoading(true);
     
@@ -60,47 +69,49 @@ const Donate = () => {
     
     toast({
       title: "Thank you for your donation!",
-      description: `Your donation of $${amount} has been received.`,
+     description: `Your donation of ₹${amount} has been received.`,
+
     });
   };
 
   const selectedCause = causes.find((c) => c.id === formData.causeId);
 
   if (isSubmitted) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-1 flex items-center justify-center py-20 bg-gradient-to-b from-muted to-background">
-          <div className="container max-w-lg">
-            <Card className="shadow-medium text-center">
-              <CardContent className="pt-12 pb-8 space-y-6">
-                <div className="mx-auto w-20 h-20 rounded-full bg-charity-sage/20 flex items-center justify-center">
-                  <CheckCircle className="h-10 w-10 text-charity-sage" />
-                </div>
-                <div className="space-y-2">
-                  <h2 className="font-display text-2xl font-bold text-foreground">
-                    Thank You for Your Generosity!
-                  </h2>
-                  <p className="text-muted-foreground">
-                    Your donation of ${formData.amount === "custom" ? formData.customAmount : formData.amount} to{" "}
-                    <span className="font-medium text-foreground">{selectedCause?.title}</span> has been received.
-                  </p>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  A confirmation email has been sent to {formData.email}
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <main className="flex-1 flex items-center justify-center py-20 bg-gradient-to-b from-muted to-background">
+        <div className="container max-w-lg">
+          <Card className="shadow-medium text-center">
+            <CardContent className="pt-12 pb-8 space-y-6">
+              <div className="mx-auto w-20 h-20 rounded-full bg-charity-sage/20 flex items-center justify-center">
+                <CheckCircle className="h-10 w-10 text-charity-sage" />
+              </div>
+              <div className="space-y-2">
+                <h2 className="font-display text-2xl font-bold text-foreground">
+                  {t.thankYou}
+                </h2>
+                <p className="text-muted-foreground">
+                  {t.confirmationEmail} {formData.email} <br />
+                  {selectedCause && (
+                    <>
+                      {selectedCause.title} donation received.
+                    </>
+                  )}
                 </p>
-                <Button onClick={() => setIsSubmitted(false)} className="gap-2">
-                  <Heart className="h-4 w-4" />
-                  Make Another Donation
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
+              </div>
+              <Button onClick={() => setIsSubmitted(false)} className="gap-2">
+                <Heart className="h-4 w-4" />
+                {t.makeAnother}
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+}
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -122,11 +133,19 @@ const Donate = () => {
             </p>
           </div>
 
+{/* ✅ Add language switcher here, above the Card */}
+    <div className="flex gap-3 mb-6 justify-end">
+      <Button size="sm" onClick={() => setLang("en")}>English</Button>
+      <Button size="sm" onClick={() => setLang("hi")}>हिंदी</Button>
+      <Button size="sm" onClick={() => setLang("mr")}>मराठी</Button>
+    </div>
+
+
           <Card className="shadow-medium">
             <CardHeader>
               <CardTitle className="font-display text-xl">Donation Details</CardTitle>
               <CardDescription>
-                Fill in the form below to complete your donation
+         {t.fillForm}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -135,27 +154,27 @@ const Donate = () => {
                 <div className="space-y-4">
                   <h3 className="font-medium text-foreground flex items-center gap-2">
                     <User className="h-4 w-4 text-primary" />
-                    Personal Information
+                    {t.personalInfo}
                   </h3>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="name">Full Name *</Label>
+                      <Label htmlFor="name">{t.fullName} *</Label>
                       <Input
                         id="name"
-                        placeholder="John Doe"
+                        placeholder={t.fullName}
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         required
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="email">Email Address *</Label>
+                      <Label htmlFor="email">{t.email}*</Label>
                       <div className="relative">
                         <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
                           id="email"
                           type="email"
-                          placeholder="john@example.com"
+                          placeholder={t.emailplaceholder}
                           className="pl-10"
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -170,14 +189,14 @@ const Donate = () => {
                 <div className="space-y-4">
                   <h3 className="font-medium text-foreground flex items-center gap-2">
                     <Heart className="h-4 w-4 text-primary" />
-                    Select a Cause *
+               {t.email}*
                   </h3>
                   <Select
                     value={formData.causeId}
                     onValueChange={(value) => setFormData({ ...formData, causeId: value })}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Choose a cause to support" />
+ <SelectValue placeholder={t.chooseCause} />
                     </SelectTrigger>
                     <SelectContent>
                       {causes.map((cause) => (
@@ -204,7 +223,7 @@ const Donate = () => {
                 <div className="space-y-4">
                   <h3 className="font-medium text-foreground flex items-center gap-2">
                     <DollarSign className="h-4 w-4 text-primary" />
-                    Donation Amount *
+              {t.donationAmount}  *
                   </h3>
                   <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
                     {donationAmounts.map((amount) => (
@@ -218,7 +237,8 @@ const Donate = () => {
                             : "bg-muted text-foreground hover:bg-muted/80 border border-border"
                         }`}
                       >
-                        ${amount}
+                        ₹{amount}
+
                       </button>
                     ))}
                     <button
@@ -230,7 +250,7 @@ const Donate = () => {
                           : "bg-muted text-foreground hover:bg-muted/80 border border-border"
                       }`}
                     >
-                      Custom
+                      {t.custom}
                     </button>
                   </div>
                   
@@ -252,20 +272,22 @@ const Donate = () => {
                 {/* Submit Button */}
                 <div className="pt-4">
                   <Button 
-                    type="submit" 
-                    size="lg" 
-                    className="w-full gap-2 shadow-soft hover:shadow-medium transition-all"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <>Processing...</>
-                    ) : (
-                      <>
-                        <CreditCard className="h-5 w-5" />
-                        Complete Donation
-                      </>
-                    )}
-                  </Button>
+  type="submit" 
+  size="lg" 
+  className="w-full gap-2 shadow-soft hover:shadow-medium transition-all"
+  disabled={isLoading}
+>
+  {isLoading ? (
+    <>Processing...</>
+  ) : (
+
+    <>
+      <CreditCard className="h-5 w-5" />
+      {t.completeDonation}
+    </>
+  )}
+</Button>
+
                   <p className="text-xs text-muted-foreground text-center mt-4">
                     Your payment information is secure and encrypted. 
                     CharityHub is a registered 501(c)(3) nonprofit organization.
