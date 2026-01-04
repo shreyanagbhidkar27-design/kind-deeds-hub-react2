@@ -86,12 +86,12 @@ const Footer = () => {
               <li className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                 <span className="text-sm text-charity-cream/70">
-                  123 Charity Lane, Hope City, HC 12345
+              123 CharityHub ,trimurti nagar ,Nagpur.
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="h-5 w-5 text-primary shrink-0" />
-                <span className="text-sm text-charity-cream/70">+1 (555) 123-4567</span>
+                <span className="text-sm text-charity-cream/70">+91 (99999-44444)</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="h-5 w-5 text-primary shrink-0" />

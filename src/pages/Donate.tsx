@@ -5,12 +5,20 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Heart, CheckCircle, CreditCard, User, Mail, DollarSign } from "lucide-react";
+import { Heart, CheckCircle, CreditCard, User, Mail} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { causes } from "@/data/mockData";
 import { translations, Language } from "../translations";
+
+const formatAmount = (value: string, lang: Language) => {
+  if (!value) return "";
+  return new Intl.NumberFormat(
+    lang === "hi" ? "hi-IN" : lang === "mr" ? "mr-IN" : "en-IN"
+  ).format(Number(value));
+};
+
 const Donate = () => {
   const [searchParams] = useSearchParams();
   const initialCause = searchParams.get("cause") || "";
@@ -69,7 +77,8 @@ if (!amount || parseFloat(amount) <= 0) {
     
     toast({
       title: "Thank you for your donation!",
-     description: `Your donation of ₹${amount} has been received.`,
+     description: `${t.donationReceived} ₹${formatAmount(amount, lang)}`,
+
 
     });
   };
@@ -143,7 +152,7 @@ if (!amount || parseFloat(amount) <= 0) {
 
           <Card className="shadow-medium">
             <CardHeader>
-              <CardTitle className="font-display text-xl">Donation Details</CardTitle>
+              <CardTitle className="font-display text-xl">  {t.donationDetails}</CardTitle>
               <CardDescription>
          {t.fillForm}
               </CardDescription>
@@ -189,7 +198,7 @@ if (!amount || parseFloat(amount) <= 0) {
                 <div className="space-y-4">
                   <h3 className="font-medium text-foreground flex items-center gap-2">
                     <Heart className="h-4 w-4 text-primary" />
-               {t.email}*
+               {t.chooseCause}*
                   </h3>
                   <Select
                     value={formData.causeId}
@@ -222,7 +231,8 @@ if (!amount || parseFloat(amount) <= 0) {
                 {/* Donation Amount */}
                 <div className="space-y-4">
                   <h3 className="font-medium text-foreground flex items-center gap-2">
-                    <DollarSign className="h-4 w-4 text-primary" />
+                  <span className="text-primary font-bold">₹</span>
+
               {t.donationAmount}  *
                   </h3>
                   <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
@@ -237,7 +247,8 @@ if (!amount || parseFloat(amount) <= 0) {
                             : "bg-muted text-foreground hover:bg-muted/80 border border-border"
                         }`}
                       >
-                        ₹{amount}
+                        ₹{formatAmount(amount.toString(), lang)}
+
 
                       </button>
                     ))}
@@ -254,21 +265,25 @@ if (!amount || parseFloat(amount) <= 0) {
                     </button>
                   </div>
                   
-                  {formData.amount === "custom" && (
-                    <div className="relative">
-                      <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        type="number"
-                        placeholder="Enter amount"
-                        className="pl-10"
-                        min="1"
-                        value={formData.customAmount}
-                        onChange={(e) => setFormData({ ...formData, customAmount: e.target.value })}
-                      />
-                    </div>
-                  )}
-                </div>
+                {formData.amount === "custom" && (
+  <div className="relative">
+    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">
+      ₹
+    </span>
 
+    <Input
+      type="number"
+      placeholder={t.enterAmount}
+      className="pl-10"
+      min="1"
+      value={formData.customAmount}
+      onChange={(e) =>
+        setFormData({ ...formData, customAmount: e.target.value })
+      }
+    />
+  </div>
+)}
+</div>
                 {/* Submit Button */}
                 <div className="pt-4">
                   <Button 

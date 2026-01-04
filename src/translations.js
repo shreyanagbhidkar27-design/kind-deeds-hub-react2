@@ -10,6 +10,7 @@ export const translations = {
     selectCause: "Select a Cause",
     chooseCause: "Choose a cause to support",
     donationAmount: "Donation Amount",
+    enterAmount:"Enter amount",
     completeDonation: "Complete Donation",
      custom: "Custom",
   },
@@ -25,6 +26,7 @@ export const translations = {
     selectCause: "कारण चुनें",
     chooseCause: "समर्थन के लिए कारण चुनें",
     donationAmount: "दान राशि",
+    enterAmount: "राशि दर्ज करें",
     completeDonation: "दान पूरा करें",
     custom: "कस्टम",
   },
@@ -40,7 +42,9 @@ export const translations = {
     selectCause: "कारण निवडा",
     chooseCause: "समर्थनासाठी कारण निवडा",
     donationAmount: "देणगी रक्कम",
+     enterAmount: "रक्कम प्रविष्ट करा",
     completeDonation: "देणगी पूर्ण करा",
     custom: "कस्टम",
   },
 };
+export default translations;
